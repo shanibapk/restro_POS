@@ -1541,7 +1541,7 @@ class _HomePageState extends State<HomePage> {
                                 customer.id ==
                                     toEditTable
                                         ?.customerId), //customer.id == toEditOrder?.customerId,customers.first,
-                            orElse: () => getCustomers(id: 0, name: null),
+                            orElse: () => customers.first,
                           )
                         : null,
                     onChanged: (getCustomers? selectedCustomer) {
