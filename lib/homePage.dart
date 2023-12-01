@@ -54,7 +54,6 @@ class _HomePageState extends State<HomePage> {
     toEditOrder = widget.orderToEdit;
     toEditSale = widget.saleToEdit;
     toEditTable = widget.tableToEdit;
-    // services = [];
 
     if (toEditOrder != null) {
       setState(() {
@@ -1386,11 +1385,12 @@ class _HomePageState extends State<HomePage> {
           Navigator.of(context).pop();
         } else {
           orderSaved = await saveSaleOrder(context, model);
-          //new one for sale
-          resetSelectedProducts();
-          resetPage();
+          print('Sale order saved');
+          setState(() {
+            resetSelectedProducts();
+            resetPage();
+          });
         }
-        // orderSaved = await saveSaleOrder(context, model);
       } else {
         //modified
         if (toEditOrder != null) {
@@ -1840,13 +1840,9 @@ class _HomePageState extends State<HomePage> {
           onTap: () {
             setStateCallback(() {
               if (!isSelected) {
-                // If the table is not selected, check for auto selection
                 if (isAutoSelected) {
-                  // Handle auto selection logic here
-                  // For example, you can change the color to indicate auto selection
                   services[index].selected = true;
                 } else {
-                  // If not auto-selected, update the selected table
                   for (var i = 0; i < services.length; i++) {
                     services[i].selected = false;
                   }
@@ -1854,7 +1850,6 @@ class _HomePageState extends State<HomePage> {
                   selectedTableId = services[index].id;
                 }
               } else {
-                // If the table is already selected, unselect it
                 services[index].selected = false;
                 selectedTableId = null;
               }

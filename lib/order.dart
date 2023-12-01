@@ -22,6 +22,13 @@ class _FirstPageState extends State<FirstPage> {
     futureOrders = fetchGetOrders();
   }
 
+  void resetPage() {
+    setState(() {
+      invoiceSearchController.clear();
+      futureOrders = fetchGetOrders();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +44,9 @@ class _FirstPageState extends State<FirstPage> {
               MaterialPageRoute(
                 builder: (context) => HomePage(),
               ),
-            );
+            ).then((_) {
+              resetPage(); // Call resetPage after returning from HomePage
+            });
           },
           child: Icon(
             Icons.add,
@@ -207,7 +216,10 @@ class _FirstPageState extends State<FirstPage> {
                                       type: 'order',
                                     ),
                                   ),
-                                );
+                                ).then((_) {
+                                  resetPage(); // Call resetPage after returning from HomePage
+                                });
+                                // Call resetPage after successful edit
                               }
                               print('List=$editedOrder');
                             },
