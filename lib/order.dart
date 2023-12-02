@@ -63,28 +63,31 @@ class _FirstPageState extends State<FirstPage> {
             padding: const EdgeInsets.only(left: 60),
             child: Row(
               children: [
-                Container(
-                  height: 70,
-                  width: 520,
-                  decoration: BoxDecoration(
+                Expanded(
+                  child: Container(
+                    height: 70,
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 3, color: Colors.deepPurple)),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 4, left: 8),
-                    child: TextField(
-                      controller: invoiceSearchController,
-                      onChanged: (value) {
-                        filterOrders(value);
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Search Order',
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(
+                      border: Border.all(width: 3, color: Colors.deepPurple),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 4, left: 8),
+                      child: TextField(
+                        controller: invoiceSearchController,
+                        onChanged: (value) {
+                          filterOrders(value);
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Search Order',
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,
-                            fontSize: 23),
+                            fontSize: 23,
+                          ),
+                        ),
+                        style: TextStyle(fontSize: 27),
                       ),
-                      style: TextStyle(fontSize: 27),
                     ),
                   ),
                 ),
@@ -99,22 +102,83 @@ class _FirstPageState extends State<FirstPage> {
                     width: 180,
                     height: 70,
                     decoration: BoxDecoration(
-                        color: Colors.deepPurple,
-                        borderRadius: BorderRadius.circular(7)),
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(7),
+                    ),
                     child: Center(
                       child: Text(
                         'SEARCH',
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700),
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
                 ),
+                SizedBox(
+                  width: 35,
+                )
               ],
             ),
           ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 60),
+          //   child: Row(
+          //     children: [
+          //       Container(
+          //         height: 70,
+          //         width: 520,
+          //         decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(10),
+          //             border: Border.all(width: 3, color: Colors.deepPurple)),
+          //         child: Padding(
+          //           padding: const EdgeInsets.only(top: 4, left: 8),
+          //           child: TextField(
+          //             controller: invoiceSearchController,
+          //             onChanged: (value) {
+          //               filterOrders(value);
+          //             },
+          //             decoration: InputDecoration(
+          //               hintText: 'Search Order',
+          //               border: InputBorder.none,
+          //               hintStyle: TextStyle(
+          //                   color: Colors.grey,
+          //                   fontWeight: FontWeight.bold,
+          //                   fontSize: 23),
+          //             ),
+          //             style: TextStyle(fontSize: 27),
+          //           ),
+          //         ),
+          //       ),
+          //       SizedBox(
+          //         width: 20,
+          //       ),
+          //       GestureDetector(
+          //         onTap: () {
+          //           filterOrders(invoiceSearchController.text);
+          //         },
+          //         child: Container(
+          //           width: 180,
+          //           height: 70,
+          //           decoration: BoxDecoration(
+          //               color: Colors.deepPurple,
+          //               borderRadius: BorderRadius.circular(7)),
+          //           child: Center(
+          //             child: Text(
+          //               'SEARCH',
+          //               style: TextStyle(
+          //                   color: Colors.white,
+          //                   fontSize: 18,
+          //                   fontWeight: FontWeight.w700),
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           SizedBox(
             height: 20,
           ),

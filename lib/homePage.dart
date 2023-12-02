@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:restro_pos/api.dart';
 import 'package:restro_pos/api_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 class HomePage extends StatefulWidget {
   final salesModel? orderToEdit;
@@ -1386,10 +1387,6 @@ class _HomePageState extends State<HomePage> {
         } else {
           orderSaved = await saveSaleOrder(context, model);
           print('Sale order saved');
-          setState(() {
-            resetSelectedProducts();
-            resetPage();
-          });
         }
       } else {
         //modified
@@ -1404,9 +1401,6 @@ class _HomePageState extends State<HomePage> {
             Navigator.of(context).pop();
           } else {
             orderSaved = await saveOrder(context, model);
-            //new one for sale not sure working
-            resetSelectedProducts();
-            resetPage();
           }
         }
       }
@@ -1447,9 +1441,7 @@ class _HomePageState extends State<HomePage> {
                         padding: const EdgeInsets.only(left: 25),
                         height: 200,
                         width: 430,
-                        child: table(setState)
-                        // table(setState, selectedTableId)
-                        ),
+                        child: table(setState)),
                   ),
                   DropdownButtonFormField2<getCustomers>(
                     dropdownSearchData: DropdownSearchData(
@@ -1493,7 +1485,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     onMenuStateChange: (isOpen) {
                       if (!isOpen) {
-                        textEditingController.clear();
+                        customertextEditingController.clear();
                       }
                     },
                     decoration: InputDecoration(
@@ -1513,35 +1505,42 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 20,
                         fontWeight: FontWeight.w900,
                       ),
-                    ), //new
-
-                    items: customers
-                        .map((customer) => DropdownMenuItem<getCustomers>(
-                              value: customer,
-                              child: Text(
-                                customer.name ?? 'Customer',
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ))
-                        .toList(),
-                    // onChanged: (selectedCustomer) {
-                    //   if (selectedCustomer != null) {
-                    //     customer = selectedCustomer.id!;
-                    //   }
-                    // },
+                    ),
+                    items: [
+                      DropdownMenuItem<getCustomers>(
+                        value: null,
+                        child: const Text(
+                          'Select a Customer',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 95, 95, 95),
+                            fontWeight: FontWeight.w900,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      ...customers.map(
+                        (customer) => DropdownMenuItem<getCustomers>(
+                          value: customer,
+                          child: Text(
+                            customer.name ?? 'Customer',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                     value: customers.isNotEmpty
-                        ? customers.firstWhere(
-                            (customer) => (customer.id ==
-                                    toEditOrder?.customerId ||
-                                customer.id == toEditSale?.customerId ||
-                                customer.id ==
-                                    toEditTable
-                                        ?.customerId), //customer.id == toEditOrder?.customerId,customers.first,
-                            orElse: () => customers.first,
+                        ? customers.firstWhereOrNull(
+                            (customer) =>
+                                (customer.id == toEditOrder?.customerId ||
+                                    customer.id == toEditSale?.customerId ||
+                                    customer.id == toEditTable?.customerId),
+
+                            // orElse: () =>
+                            //     null,
                           )
                         : null,
                     onChanged: (getCustomers? selectedCustomer) {
@@ -1552,6 +1551,109 @@ class _HomePageState extends State<HomePage> {
                       }
                     },
                   ),
+
+                  // DropdownButtonFormField2<getCustomers>(
+                  //   dropdownSearchData: DropdownSearchData(
+                  //     searchController: customertextEditingController,
+                  //     searchInnerWidgetHeight: 60,
+                  //     searchInnerWidget: Container(
+                  //       height: 50,
+                  //       padding: const EdgeInsets.only(
+                  //         top: 8,
+                  //         bottom: 4,
+                  //         right: 8,
+                  //         left: 8,
+                  //       ),
+                  //       child: TextFormField(
+                  //         expands: true,
+                  //         maxLines: null,
+                  //         controller: customertextEditingController,
+                  //         decoration: InputDecoration(
+                  //           isDense: true,
+                  //           contentPadding: const EdgeInsets.symmetric(
+                  //             horizontal: 10,
+                  //             vertical: 8,
+                  //           ),
+                  //           hintText: 'Search customer',
+                  //           hintStyle: const TextStyle(fontSize: 21),
+                  //           border: OutlineInputBorder(
+                  //             borderRadius: BorderRadius.circular(8),
+                  //           ),
+                  //         ),
+                  //         style: const TextStyle(
+                  //             fontSize: 21, fontWeight: FontWeight.w600),
+                  //       ),
+                  //     ),
+                  //     searchMatchFn: (item, searchValue) {
+                  //       return (item.child as Text)
+                  //           .data
+                  //           .toString()
+                  //           .toUpperCase()
+                  //           .contains(searchValue.toUpperCase());
+                  //     },
+                  //   ),
+                  //   onMenuStateChange: (isOpen) {
+                  //     if (!isOpen) {
+                  //       textEditingController.clear();
+                  //     }
+                  //   },
+                  //   decoration: InputDecoration(
+                  //     isDense: true,
+                  //     contentPadding: const EdgeInsets.only(
+                  //       top: 14,
+                  //       bottom: 14,
+                  //     ),
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(5),
+                  //     ),
+                  //   ),
+                  //   isExpanded: true,
+
+                  //   hint: const Text(
+                  //     'Select a Customer',
+                  //     style: TextStyle(
+                  //       fontSize: 20,
+                  //       fontWeight: FontWeight.w900,
+                  //     ),
+                  //   ), //new
+
+                  //   items: customers
+                  //       .map((customer) => DropdownMenuItem<getCustomers>(
+                  //             value: customer,
+                  //             child: Text(
+                  //               customer.name ?? 'Customer',
+                  //               style: const TextStyle(
+                  //                 color: Colors.black,
+                  //                 fontWeight: FontWeight.w900,
+                  //                 fontSize: 20,
+                  //               ),
+                  //             ),
+                  //           ))
+                  //       .toList(),
+                  //   // onChanged: (selectedCustomer) {
+                  //   //   if (selectedCustomer != null) {
+                  //   //     customer = selectedCustomer.id!;
+                  //   //   }
+                  //   // },
+                  //   value: customers.isNotEmpty
+                  //       ? customers.firstWhere(
+                  //           (customer) => (customer.id ==
+                  //                   toEditOrder?.customerId ||
+                  //               customer.id == toEditSale?.customerId ||
+                  //               customer.id ==
+                  //                   toEditTable
+                  //                       ?.customerId), //customer.id == toEditOrder?.customerId,customers.first,
+                  //           orElse: () => customers.first,
+                  //         )
+                  //       : null,
+                  //   onChanged: (getCustomers? selectedCustomer) {
+                  //     if (selectedCustomer != null) {
+                  //       setState(() {
+                  //         customer = selectedCustomer.id!;
+                  //       });
+                  //     }
+                  //   },
+                  // ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -1594,10 +1696,10 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.only(top: 1, left: 8),
                           child: TextField(
                             controller: custNum,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'Customer Number',
                               border: InputBorder.none,
-                              hintStyle: const TextStyle(
+                              hintStyle: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 23),
@@ -1881,118 +1983,4 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
-  // Widget table(Function setStateCallback, int? selectedTableId) {
-  //   return GridView.builder(
-  //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //       crossAxisCount: 3,
-  //       crossAxisSpacing: 20,
-  //       mainAxisSpacing: 20,
-  //     ),
-  //     itemCount: services.length,
-  //     itemBuilder: (context, index) {
-  //       final isTableSelected = services[index].selected;
-  //       final tableId = services[index].id;
-
-  //       // Check if the table is selected based on deliveredBy value
-  //       final isSelected =
-  //           selectedTableId != null && selectedTableId == tableId;
-
-  //       return GestureDetector(
-  //         onTap: () {
-  //           setStateCallback(() {
-  //             for (var i = 0; i < services.length; i++) {
-  //               services[i].selected = false;
-  //             }
-
-  //             if (!isTableSelected) {
-  //               services[index].selected = true;
-  //               selectedTableId = tableId;
-  //               final selectedTableName = services[index].name;
-  //               print('Selected Table ID: $selectedTableId');
-  //               print('Selected Table Name: $selectedTableName');
-  //             } else {
-  //               // If the table is already selected, unselect it
-  //               selectedTableId = null;
-  //             }
-  //           });
-  //         },
-  //         child: Container(
-  //           height: 80,
-  //           width: 150,
-  //           decoration: BoxDecoration(
-  //             color: isSelected ? Colors.grey : Colors.deepPurple,
-  //             borderRadius: BorderRadius.circular(7),
-  //             border: Border.all(
-  //               width: 2.5,
-  //             ),
-  //           ),
-  //           child: Center(
-  //             child: Text(
-  //               services[index].name ?? '',
-  //               style: const TextStyle(
-  //                 fontWeight: FontWeight.w900,
-  //                 color: Colors.white,
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Widget table(Function setStateCallback) {
-  //   return GridView.builder(
-  //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //       crossAxisCount: 3,
-  //       crossAxisSpacing: 20,
-  //       mainAxisSpacing: 20,
-  //     ),
-  //     itemCount: services.length,
-  //     itemBuilder: (context, index) {
-  //       final isSelected = services[index].selected;
-
-  //       return GestureDetector(
-  //         onTap: () {
-  //           setStateCallback(() {
-  //             for (var i = 0; i < services.length; i++) {
-  //               services[i].selected = false;
-  //             }
-  //             if (!isSelected) {
-  //               services[index].selected = true;
-  //               selectedTableId = services[index].id;
-  //               final selectedTableName = services[index].name;
-  //               print('Selected Table ID: $selectedTableId');
-  //               print('Selected Table Name: $selectedTableName');
-  //             } else {
-  //               // If the table is already selected, unselect it
-  //               selectedTableId = null;
-  //             }
-  //           });
-  //         },
-  //         child: Container(
-  //           height: 80,
-  //           width: 150,
-  //           decoration: BoxDecoration(
-  //             color: isSelected ? Colors.grey : Colors.deepPurple,
-  //             borderRadius: BorderRadius.circular(7),
-  //             border: Border.all(
-  //               width: 2.5,
-  //             ),
-  //           ),
-  //           child: Center(
-  //             child: Text(
-  //               services[index].name ?? '',
-  //               style: const TextStyle(
-  //                 fontWeight: FontWeight.w900,
-  //                 color: Colors.white,
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 }
